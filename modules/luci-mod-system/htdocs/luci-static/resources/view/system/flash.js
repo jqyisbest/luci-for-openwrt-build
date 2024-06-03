@@ -147,7 +147,8 @@ return view.extend({
 						E('p', _('The restore command failed with code %d').format(res.code)),
 						res.stderr ? E('pre', {}, [ res.stderr ]) : ''
 					]);
-					L.raise('Error', 'Unpack failed');
+					/* reboot anyway */
+					/* L.raise('Error', 'Unpack failed');*/
 				}
 
 				btn.firstChild.data = _('Rebooting…');
