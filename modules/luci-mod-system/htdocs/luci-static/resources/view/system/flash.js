@@ -147,8 +147,7 @@ return view.extend({
 						E('p', _('The restore command failed with code %d').format(res.code)),
 						res.stderr ? E('pre', {}, [ res.stderr ]) : ''
 					]);
-					/* reboot anyway */
-					/* L.raise('Error', 'Unpack failed'); */
+					L.raise('Error', 'Unpack failed');
 				}
 
 				btn.firstChild.data = _('Rebooting…');
@@ -157,8 +156,7 @@ return view.extend({
 			.then(L.bind(function(res) {
 				if (res.code != 0) {
 					ui.addNotification(null, E('p', _('The reboot command failed with code %d').format(res.code)));
-					/* reboot anyway */
-					/* L.raise('Error', 'Reboot failed'); */
+					L.raise('Error', 'Reboot failed');
 				}
 
 				ui.showModal(_('Rebooting…'), [
