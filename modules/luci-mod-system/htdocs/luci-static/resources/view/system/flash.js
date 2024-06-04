@@ -144,7 +144,7 @@ return view.extend({
 			.then(L.bind(function(btn, res) {
 				if (res.code != 0) {
 					ui.addNotification(null, [
-						E('p', _('The restore command failed with code %d').format(res.code)),
+						E('p', _('The restore command failed with code %d,please restore by bash in ssh:tar -C / -xvzf /tmp/backup.tar.gz && reboot.').format(res.code)),
 						res.stderr ? E('pre', {}, [ res.stderr ]) : ''
 					]);
 					L.raise('Error', 'Unpack failed');
