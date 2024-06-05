@@ -105,38 +105,8 @@ return view.extend({
 	},
 
 	handleRestore: function(ev) {
-		return ui.uploadFile('/var/tmp/backup.tar.gz', ev.target)
-			.then(L.bind(function(btn, res) {
-				btn.firstChild.data = _('Checking archive…');
-				return fs.exec('/bin/tar', [ '-tzf', '/var/tmp/backup.tar.gz' ]);
-			}, this, ev.target))
-			.then(L.bind(function(btn, res) {
-				if (res.code != 0) {
-					ui.addNotification(null, E('p', _('The uploaded backup archive is not readable')));
-					return fs.remove('/var/tmp/backup.tar.gz');
-				}
-
-				ui.showModal(_('Apply backup?'), [
-					E('p', _('The uploaded backup archive appears to be valid and contains the files listed below. Press "Continue" to restore the backup and reboot, or "Cancel" to abort the operation.')),
-					E('pre', {}, [ res.stdout ]),
-					E('div', { 'class': 'right' }, [
-						E('button', {
-							'class': 'btn',
-							'click': ui.createHandlerFn(this, function(ev) {
-								return fs.remove('/var/tmp/backup.tar.gz').finally(ui.hideModal);
-							})
-						}, [ _('Cancel') ]), ' ',
-						E('button', {
-							'class': 'btn cbi-button-action important',
-							'click': ui.createHandlerFn(this, 'handleRestoreConfirm', btn)
-						}, [ _('Continue') ])
-					])
-				]);
-			}, this, ev.target))
-			.catch(function(e) { ui.addNotification(null, E('p', e.message)) })
-			.finally(L.bind(function(btn, input) {
-				btn.firstChild.data = _('Upload archive...');
-			}, this, ev.target));
+		ui.addNotification(null, E('p', _('Please restore with command in ssh:tar -C / -xvzf /var/tmp/backup.tar.gz && reboot.')));
+		return 0;
 	},
 
 	handleRestoreConfirm: function(btn, ev) {
