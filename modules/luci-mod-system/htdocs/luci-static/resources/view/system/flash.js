@@ -105,15 +105,15 @@ return view.extend({
 	},
 
 	handleRestore: function(ev) {
-		return ui.uploadFile('/tmp/backup.tar.gz', ev.target)
+		return ui.uploadFile('/var/tmp/backup.tar.gz', ev.target)
 			.then(L.bind(function(btn, res) {
 				btn.firstChild.data = _('Checking archive…');
-				return fs.exec('/bin/tar', [ '-tzf', '/tmp/backup.tar.gz' ]);
+				return fs.exec('/bin/tar', [ '-tzf', '/var/tmp/backup.tar.gz' ]);
 			}, this, ev.target))
 			.then(L.bind(function(btn, res) {
 				if (res.code != 0) {
 					ui.addNotification(null, E('p', _('The uploaded backup archive is not readable')));
-					return fs.remove('/tmp/backup.tar.gz');
+					return fs.remove('/var/tmp/backup.tar.gz');
 				}
 
 				ui.showModal(_('Apply backup?'), [
@@ -123,7 +123,7 @@ return view.extend({
 						E('button', {
 							'class': 'btn',
 							'click': ui.createHandlerFn(this, function(ev) {
-								return fs.remove('/tmp/backup.tar.gz').finally(ui.hideModal);
+								return fs.remove('/var/tmp/backup.tar.gz').finally(ui.hideModal);
 							})
 						}, [ _('Cancel') ]), ' ',
 						E('button', {
@@ -140,11 +140,11 @@ return view.extend({
 	},
 
 	handleRestoreConfirm: function(btn, ev) {
-		return fs.exec('/sbin/sysupgrade', [ '--restore-backup', '/tmp/backup.tar.gz' ])
+		return fs.exec('/sbin/sysupgrade', [ '--restore-backup', '/var/tmp/backup.tar.gz' ])
 			.then(L.bind(function(btn, res) {
 				if (res.code != 0) {
 					ui.addNotification(null, [
-						E('p', _('The restore command failed with code %d,please restore by bash in ssh:tar -C / -xvzf /tmp/backup.tar.gz && reboot.').format(res.code)),
+						E('p', _('The restore command failed with code %d,please restore by bash in ssh:tar -C / -xvzf /var/tmp/backup.tar.gz && reboot.').format(res.code)),
 						res.stderr ? E('pre', {}, [ res.stderr ]) : ''
 					]);
 					L.raise('Error', 'Unpack failed');
